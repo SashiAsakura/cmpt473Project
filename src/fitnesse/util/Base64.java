@@ -11,8 +11,12 @@ public class Base64 {
   private static final int[] base64Value;
   static {{
 	base64Value = new int[0xff+1];
+	
+	// Init array of size 256
 	for (int i = 0; i <= 0xff; i++)
 	  base64Value[i] = -1;
+	
+	// From 0 to 63
 	for (int v = 0; v <= 0x3f; v++)
 	  base64Value[base64Alphabet[v]] = v;
 	base64Value[pad] = 0;
@@ -76,6 +80,13 @@ public class Base64 {
     }
     return encoding;
   }
+  
+  public static int getValueFor(byte b) {
+	int value = base64Value[b & 0xff];
+	if (value == -1)
+	  throw new IllegalArgumentException("Invalid BASE64 symbol: " + (char)(b & 0xff));
+	return value;
+  }
 
   private static int getLengthOfDecoding(byte[] bytes) {
     if ((bytes.length & 3) != 0)
@@ -94,13 +105,6 @@ public class Base64 {
 
   private static int getLengthOfEncoding(byte[] bytes) {
 	return ((bytes.length + 2) / 3) << 2;
-  }
-
-  public static int getValueFor(byte b) {
-	int value = base64Value[b & 0xff];
-	if (value == -1)
-	  throw new IllegalArgumentException("Invalid BASE64 symbol: " + (char)(b & 0xff));
-	return value;
   }
 
 }

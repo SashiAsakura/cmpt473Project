@@ -21,89 +21,157 @@ the first 8bit byte, and so on.
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.UnsupportedEncodingException;
+
 import org.junit.Test;
 
 import fitnesse.util.Base64;
 import junit.framework.*;
 
 public class Base64Test extends TestCase {
+	@Test
+	public void testGetValueForNormalValues() throws Exception {
+		assertEquals(0, Base64.getValueFor((byte) 'A'));
+		assertEquals(17, Base64.getValueFor((byte) 'R'));
+		assertEquals(26, Base64.getValueFor((byte) 'a'));
+		assertEquals(43, Base64.getValueFor((byte) 'r'));
+		assertEquals(52, Base64.getValueFor((byte) '0'));
+		assertEquals(61, Base64.getValueFor((byte) '9'));
+		assertEquals(62, Base64.getValueFor((byte) '+'));
+	}
+	
+	@Test
+	public void testGetValueForAbnormalValues() throws Exception {
+		Throwable exception = null;
+		try {
+			Base64.getValueFor((byte) '@');
+		}
+		catch (Exception e) {
+			exception = e;
+		}
+		assertTrue(exception instanceof IllegalArgumentException);
+		
+		try {
+			Base64.getValueFor((byte) '=');
+		}
+		catch (Exception e) {
+			exception = e;
+		}
+		assertTrue(exception instanceof IllegalArgumentException);
+		
+		try {
+			Base64.getValueFor((byte) '(');
+		}
+		catch (Exception e) {
+			exception = e;
+		}
+		assertTrue(exception instanceof IllegalArgumentException);
+	}
+	
+	/*
+	 * Tests for encode()
+	 */
+	@Test
+	public void testEncodeSingleChar() {
+		assertEquals("TQ==", Base64.encode("M"));
+	}
+	
+	@Test
+	public void testEncodeTwoChars() {
+		assertEquals("TWE=", Base64.encode("Ma"));
+	}
+	
+	@Test
+	public void testEncodeThreeChars() {
+		assertEquals("TWEy", Base64.encode("Ma2"));
+	}
+	
+	@Test
+	public void testEncodeNoChar() {
+		assertEquals("", Base64.encode(""));
+	}
+	
+	@Test
+	public void testEncodeWhitespace() {
+		assertEquals("IA==", Base64.encode(" "));
+	}
+	
+	@Test
+	public void testEncodeTab() {
+		assertEquals("L3Q=", Base64.encode("/t"));
+	}
+	
+	@Test
+	public void testEncodeLongChars() {
+		assertEquals("SGVsbG8gV29ybGQgMjAxNCE=", Base64.encode("Hello World 2014!"));
+	}
+	
+	/*
+	 * Tests for decode()
+	 */
+	@Test
+	public void testDecodeSingleChar() throws UnsupportedEncodingException {
+		assertEquals("M", Base64.decode("TQ=="));
+	}
+	
+	@Test
+	public void testDecodeTwoChars() throws UnsupportedEncodingException {
+		assertEquals("Ma", Base64.decode("TWE="));
+	}
+	
+	@Test
+	public void testDecodeThreeChars() throws UnsupportedEncodingException {
+		assertEquals("Ma2", Base64.decode("TWEy"));
+	}
+	
+	@Test
+	public void testDecodeNoChar() throws UnsupportedEncodingException {
+		assertEquals("", Base64.decode(""));
+	}
+	
+	@Test
+	public void testDecodeWhitespace() throws UnsupportedEncodingException {
+		assertEquals(" ", Base64.decode("IA=="));
+	}
+	
+	@Test
+	public void testDecodeTab() throws UnsupportedEncodingException {
+		assertEquals("/t", Base64.decode("L3Q="));
+	}
+	
+	@Test
+	public void testDecodeLongChars() throws UnsupportedEncodingException {
+		assertEquals("Hello World 2014!", Base64.decode("SGVsbG8gV29ybGQgMjAxNCE="));
+	}
 
-@Test
-public void testGetValueFor() throws Exception {
- assertEquals(0, Base64.getValueFor((byte) 'A'));
- assertEquals(26, Base64.getValueFor((byte) 'a'));
- assertEquals(52, Base64.getValueFor((byte) '0'));
-}
+/*
+ * Tests below were portion of the original test cases that I didn't cover
+ */
 
-@Test
-public void testDecodeNothing() throws Exception {
- assertEquals("", Base64.decode(""));
-}
-
-@Test
-public void testDecodeOneChar() throws Exception {
- assertEquals("a", Base64.decode("YQ=="));
-}
-
-@Test
-public void testDecodeTwoChars() throws Exception {
- assertEquals("a:", Base64.decode("YTo="));
-}
-
-@Test
-public void testDecodeLongSample() throws Exception {
- assertEquals("Aladdin:open sesame", Base64.decode("QWxhZGRpbjpvcGVuIHNlc2FtZQ=="));
-}
-
-@Test
-public void testEncodeNothing() throws Exception {
- assertEquals("", Base64.encode(""));
-}
-
-@Test
-public void testEncodeOneChar() throws Exception {
- assertEquals("YQ==", Base64.encode("a"));
-}
-
-@Test
-public void testEncodeTwoChars() throws Exception {
- assertEquals("YTo=", Base64.encode("a:"));
-}
-
-@Test
-public void testEncodeThreeChars() throws Exception {
- assertEquals("YWJj", Base64.encode("abc"));
-}
-
-@Test
-public void testEncodeLongSample() throws Exception {
- assertEquals("QWxhZGRpbjpvcGVuIHNlc2FtZQ==", Base64.encode("Aladdin:open sesame"));
-}
-
-@Test
-public void testEncodeNuls() throws Exception {
- assertEquals("AAAA", Base64.encode("\0\0\0"));
- assertEquals("AAA=", Base64.encode("\0\0"));
- assertEquals("AA==", Base64.encode("\0"));
-}
-
-@Test
-public void testEncodeBinary() throws Exception {
- assertEquals("////", new String(Base64.encode(new byte [] { -1,-1,-1 })));
- assertEquals("WqVapVql", new String(Base64.encode(new byte [] { 90,-91,90,-91,90,-91 })));
-}
-
-@Test
-public void testDecodeNuls() throws Exception {
- assertEquals(Base64.decode("AAAA"), "\0\0\0");
- assertEquals(Base64.decode("AAA="), "\0\0");
- assertEquals(Base64.decode("AA=="), "\0");
-}
-
-@Test
-public void testDecodeBinary() throws Exception {
- assertEquals(Base64.decode("////"), new String(new byte [] { -1,-1,-1 }));
- assertEquals(Base64.decode("WqVapVql"), new String(new byte [] { 90,-91,90,-91,90,-91 }));
-}
+//	@Test
+//	public void testEncodeNuls() throws Exception {
+//	 assertEquals("AAAA", Base64.encode("\0\0\0"));
+//	 assertEquals("AAA=", Base64.encode("\0\0"));
+//	 assertEquals("AA==", Base64.encode("\0"));
+//	}
+//	
+//	@Test
+//	public void testEncodeBinary() throws Exception {
+//	 assertEquals("////", new String(Base64.encode(new byte [] { -1,-1,-1 })));
+//	 assertEquals("WqVapVql", new String(Base64.encode(new byte [] { 90,-91,90,-91,90,-91 })));
+//	}
+//	
+//	@Test
+//	public void testDecodeNuls() throws Exception {
+//	 assertEquals(Base64.decode("AAAA"), "\0\0\0");
+//	 assertEquals(Base64.decode("AAA="), "\0\0");
+//	 assertEquals(Base64.decode("AA=="), "\0");
+//	}
+//	
+//	@Test
+//	public void testDecodeBinary() throws Exception {
+//	 assertEquals(Base64.decode("////"), new String(new byte [] { -1,-1,-1 }));
+//	 assertEquals(Base64.decode("WqVapVql"), new String(new byte [] { 90,-91,90,-91,90,-91 }));
+//	}
 
 }
