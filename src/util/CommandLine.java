@@ -68,6 +68,7 @@ public class CommandLine extends Option {
     return getOptionArgument(optionName, argName, null);
   }
 
+  // More like "searchOptionArgument()"
   public String getOptionArgument(String optionName, String argName, String defaultValue) {
     Option option = possibleOptions.get(optionName);
     if (option == null)
