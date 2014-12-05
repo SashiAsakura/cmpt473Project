@@ -9,6 +9,7 @@ import java.awt.Point;
 import fit.decorator.exceptions.InvalidInputException;
 import org.junit.Test;
 
+// Possible test development
 public class DataTypeTest {
 
   @Test

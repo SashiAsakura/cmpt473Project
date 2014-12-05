@@ -7,6 +7,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintStream;
 
+// Possible test development
 public class StandardOutAndErrorRecorder {
   private PrintStream originalErrStream;
   private PrintStream originalOutStream;

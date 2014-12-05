@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+// Possible test development
 public class FitMatcherTest {
 
   private void assertMatch(String expression, Number parameter) throws Exception {

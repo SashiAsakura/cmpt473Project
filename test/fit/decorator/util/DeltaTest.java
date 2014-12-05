@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import fit.decorator.exceptions.InvalidInputException;
 import org.junit.Test;
 
+// Possible test development
 public class DeltaTest {
 
   private static final String INT_DATA_TYPE = "int";
