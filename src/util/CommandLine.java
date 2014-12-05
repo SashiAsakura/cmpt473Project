@@ -11,6 +11,7 @@ public class CommandLine extends Option {
   private static final Pattern optionPattern = Pattern.compile("\\[-(\\w+)((?: \\w+)*)\\]");
   private Map<String, Option> possibleOptions = new ConcurrentHashMap<String, Option>();
 
+  // What's optionDescriptor?
   public CommandLine(String optionDescriptor) {
     int optionEndIndex = 0;
     Matcher matcher = optionPattern.matcher(optionDescriptor);
@@ -25,6 +26,7 @@ public class CommandLine extends Option {
     parseArgumentDescriptor(remainder);
   }
 
+  // Overwrite arguments array if new
   public boolean parse(String[] args) {
     boolean successfulParse = true;
     Option currentOption = this;
@@ -49,7 +51,6 @@ public class CommandLine extends Option {
         currentOption.addArgument(arg);
       else // too many args
         successfulParse = false;
-
     }
     if (successfulParse && currentOption.needsMoreArguments())
       successfulParse = false;
@@ -86,6 +87,8 @@ class Option {
   protected String[] argumentValues;
   protected int argumentIndex = 0;
 
+  // Parse string arguments into array
+  // What are aguments' values: arguments = "arg0 arg1"
   protected void parseArgumentDescriptor(String arguments) {
     String[] tokens = split(arguments);
     argumentNames = tokens;
