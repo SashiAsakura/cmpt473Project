@@ -28,13 +28,12 @@ import org.junit.Test;
 import fitnesse.util.Base64;
 import junit.framework.*;
 
+// 22 assertions
 public class Base64Test_CMPT473 extends TestCase {
 	@Test
 	public void testGetValueForNormalValues() throws Exception {
 		assertEquals(0, Base64.getValueFor((byte) 'A'));
-		assertEquals(17, Base64.getValueFor((byte) 'R'));
 		assertEquals(26, Base64.getValueFor((byte) 'a'));
-		assertEquals(43, Base64.getValueFor((byte) 'r'));
 		assertEquals(52, Base64.getValueFor((byte) '0'));
 		assertEquals(61, Base64.getValueFor((byte) '9'));
 		assertEquals(62, Base64.getValueFor((byte) '+'));

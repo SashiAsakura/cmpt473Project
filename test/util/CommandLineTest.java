@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-// Possible test development
+// 39 assertions
 public class CommandLineTest {
   private CommandLine options;
 

@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+// 22 assertions
 public class Base64Test {
 
   @Test
