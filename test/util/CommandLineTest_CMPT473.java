@@ -123,8 +123,7 @@ public class CommandLineTest_CMPT473 {
 	public void testHasOptionNull() {
 		cl = new CommandLine("[arg0]");
 		String[] argVals = new Option().split("val0");
-		cl.parse(argVals);
-		
+		assertTrue(cl.parse(argVals));
 		assertFalse(cl.hasOption("arg0"));
 	}
 	
@@ -132,8 +131,7 @@ public class CommandLineTest_CMPT473 {
 	public void testHasOptionNull2() {
 		cl = new CommandLine("[]");
 		String[] argVals = new Option().split("val0");
-		cl.parse(argVals);
-		
+		assertTrue(cl.parse(argVals));
 		assertFalse(cl.hasOption(""));
 	}
 	
@@ -141,8 +139,7 @@ public class CommandLineTest_CMPT473 {
 	public void testHasOptionNull3() {
 		cl = new CommandLine("[-]");
 		String[] argVals = new Option().split("val0");
-		cl.parse(argVals);
-		
+		assertTrue(cl.parse(argVals));
 		assertFalse(cl.hasOption("-"));
 	}
 	
@@ -150,17 +147,23 @@ public class CommandLineTest_CMPT473 {
 	public void testHasOption() {
 		cl = new CommandLine("[-opt0 arg0]");
 		String[] argVals = new Option().split("-opt0 val0");
-		cl.parse(argVals);
-		
+		assertTrue(cl.parse(argVals));
 		assertTrue(cl.hasOption("opt0"));
+	}
+	
+	@Test
+	public void testHasOption1() {
+		cl = new CommandLine("[-opt0 arg0]");
+		String[] argVals = new Option().split("");
+		assertTrue(cl.parse(argVals));
+		assertFalse(cl.hasOption("opt0"));
 	}
 	
 	@Test
 	public void testHasOption2() {
 		cl = new CommandLine("[opt0 -arg0]");
 		String[] argVals = new Option().split("-arg0 val0");
-		cl.parse(argVals);
-		
+		assertTrue(cl.parse(argVals));
 		assertFalse(cl.hasOption("opt0"));
 		assertFalse(cl.hasOption("arg0"));
 	}
@@ -169,8 +172,7 @@ public class CommandLineTest_CMPT473 {
 	public void testHasOption3() {
 		cl = new CommandLine("[-opt0 arg0 -opt1 arg1]");
 		String[] argVals = new Option().split("-opt0 val0 -opt1 val1");
-		cl.parse(argVals);
-		
+		assertTrue(cl.parse(argVals));
 		assertFalse(cl.hasOption("opt1"));
 	}
 	
@@ -178,11 +180,20 @@ public class CommandLineTest_CMPT473 {
 	public void testHasOption4() {
 		cl = new CommandLine("[-opt0 arg0 arg1 -opt1 arg2]");
 		String[] argVals = new Option().split("-opt0 val0 val1 -opt1 val2");
-		cl.parse(argVals);
-		
+		assertTrue(cl.parse(argVals));
 		assertFalse(cl.hasOption("opt0"));
 		assertFalse(cl.hasOption("opt1"));
 	}
+	
+	  @Test
+	  public void testGetArguments() {
+		cl = new CommandLine("arg0 arg1 arg2");
+		String[] argVals = new Option().split("val0 val1 val2");
+		assertTrue(cl.parse(argVals));
+	    assertEquals("val0", cl.getArgument("arg0"));
+	    assertEquals("val1", cl.getArgument("arg1"));
+	    assertEquals("val2", cl.getArgument("arg2"));
+	  }
 	
 	/*
 	 * Test cases for getOptionArgument()
@@ -192,8 +203,7 @@ public class CommandLineTest_CMPT473 {
 	public void testGetOptionArgument() {
 		cl = new CommandLine("[-opt0 arg0 arg1]");
 		String[] argVals = new Option().split("-opt0 val0 val1");
-		cl.parse(argVals);
-		
+		assertTrue(cl.parse(argVals));
 		assertEquals(cl.getOptionArgument("opt0", "arg0"), "val0");
 		assertEquals(cl.getOptionArgument("opt0", "arg1"), "val1");
 	}
@@ -202,8 +212,7 @@ public class CommandLineTest_CMPT473 {
 	public void testGetOptionArgumentNonExistingArg() {
 		cl = new CommandLine("[-opt1 arg0 arg1]");
 		String[] argVals = new Option().split("-opt1 val0");
-		cl.parse(argVals);
-		
+		assertTrue(cl.parse(argVals));
 		assertEquals(cl.getOptionArgument("opt1", "arg2"), null);
 	}
 	
